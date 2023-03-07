@@ -19,7 +19,7 @@ from .models import User
 # Create User
 @app.post("/api/users/create")
 def user_create():
-    return User.create_user('Carlos', 'Galceran', 'cargalceran@gmail.com', '12345')
+    return User.create_user('George', 'Bento', 'bento.george@yahoo.com', '23974')
 
 # Get list of users
 @app.get('/api/users')
@@ -28,21 +28,31 @@ def handle_users():
 
 
 # Get Individual user
-# @app.get('/api/users/<id>')
-# def handleSingleUsers(id):
-#     return list(users)
+@app.get('/api/users/<email>')
+def handleSingleUsers(email):
+    return User.get_user(email)
 
 # ====================================================
 # Messages
 # ====================================================
 
-# @app.route('/api/messages', methods=['GET', 'POST'])
+# @app.get('/api/messages')
 # def handleMessages():
 #     messages = []
 #     for user in users:
 #         for data in user['messages']:
 #             messages.append(data)
-#     return "messages" 
+#     return "messages"
+
+
+
+# # @app.post('/api/messages')
+# def handleMessages():
+#     messages = []
+#     for user in users:
+#         for data in user['messages']:
+#             messages.append(data)
+#     return "messages"  
 
 
 

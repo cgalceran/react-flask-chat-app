@@ -1,6 +1,6 @@
 from server import app, db
 from datetime import datetime
-from flask import jsonify
+
 
 # -------User Class --------------------------------------------
 class User(db.Model):
@@ -27,15 +27,37 @@ class User(db.Model):
 
         return user
     
+    def get_user(email):
+        data = User.query.filter_by(email=email).first()
+        if data == None:
+            return 'User does not exist'
+        return {'_id': data.id,
+                'firstname': data.firstname,
+                'lastname': data.lastname,
+                'email': data.email,
+                'password': data.password,
+                'created_at': data.created_at.strftime("%m/%d/%Y-%H:%M:%S")
+            }
+  
     def create_user(firstname,lastname, email, password):
-        check_email = User.query.filter_by(email=email).first()
-        if email != None or check_email != check_email.email:
+        check_if_email_exists = User.query.filter_by(email=email).first()
+        if check_if_email_exists == None:
+                        #true
             user = User(firstname=firstname, lastname=lastname, email=email, password=password)
             db.session.add(user)
             db.session.commit()
-            return '% r' % User.query.filter_by(email=email).first()
+            print('Created User:', firstname, 'with email:',email)
+            return '% r' % User.query.filter_by(email=email).first()            
         else:
-            return 'User already exists'
+            if email != check_if_email_exists.email:
+                        #true
+                user = User(firstname=firstname, lastname=lastname, email=email, password=password)
+                db.session.add(user)
+                db.session.commit()
+                print('Created User:', firstname, 'with email:',email)
+                return '% r' % User.query.filter_by(email=email).first()                         
+            else:
+                return 'User already exists'    
 
     def __repr__(self):
         return '<User %r>' % self.firstname

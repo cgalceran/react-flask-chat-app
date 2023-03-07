@@ -10,7 +10,7 @@ export const UserContextProvider = ({children}) => {
 
 
 
-  const register = (email, firstname, lastname,  pass) => {
+  const register = ( firstname,lastname,email,password) => {
     console.log(
       "Email",
       email,
@@ -19,7 +19,7 @@ export const UserContextProvider = ({children}) => {
       "Lastname:",
       lastname,
       "Password:",
-      pass
+      password
     );
   }
 
