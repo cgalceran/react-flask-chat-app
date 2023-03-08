@@ -42,7 +42,7 @@ const Login = () => {
           <input
             onChange={(e) => e.target.value}
             id="username"
-            placeholder="Username"
+            placeholder="Email"
             className="border-none bg-[#171717] p-2 text-[#d3d3d3] outline-none"
             type="text"
           />

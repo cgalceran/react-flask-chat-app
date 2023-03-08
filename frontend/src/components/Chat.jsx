@@ -27,17 +27,17 @@ const Chat = () => {
   return (
     <main className="grid h-96 w-1/2 grid-cols-2 gap-2">
       <div className="bg-slate-400 outline-double ">
-        <ul>{users && users.map((user) => <li>{user.name}</li>)}</ul>
+        <ul>{users && users.map((user, i) => <li key={i}>{user.name}</li>)}</ul>
       </div>
 
       <div>
         <div className="h-80 bg-slate-400 outline-double overflow-y-auto">
           <ul>
             {users &&
-              users.map((user) => (
-                <ul>
-                  {user.messages.map((message) => (
-                    <li>{user.name}: {message.message}</li>
+              users.map((user, i) => (
+                <ul key={i}>
+                  {user.messages.map((message, i) => (
+                    <li key={i}>{user.name}: {message.message}</li>
                   ))}
                 </ul>
               ))}

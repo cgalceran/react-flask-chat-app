@@ -8,7 +8,7 @@ class User(db.Model):
     firstname = db.Column(db.String(30), nullable=False)
     lastname = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String, nullable=False)
-    password = db.Column(db.String(8), nullable=False)
+    password = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
 
     def get_users():
@@ -57,7 +57,7 @@ class User(db.Model):
                 print('Created User:', firstname, 'with email:',email)
                 return '% r' % User.query.filter_by(email=email).first()                         
             else:
-                return 'User already exists'    
+                return 'User already exists', 500    
 
     def __repr__(self):
         return '<User %r>' % self.firstname
@@ -70,14 +70,26 @@ class Messages(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def getMessages():
-        return 'messages'
+    def get_messages():
+        data = Messages.query.all()
+        message = []
+        for element in data:
+            dict = {
+                '_id': element.id,
+                'message': element.message,
+                'user_id': element.user_id,
+                'created_at': element.created_at.strftime("%m/%d/%Y-%H:%M:%S")
+            }
+            message.append(dict)
 
-    def getMessage():
-        return ' specific message'
+        return message
 
-    def createMessage():
-        return 'message created'
+    def create_message(message, user_id):
+        if user_id != None:
+            message = Messages(message=message, user_id=user_id)
+            db.session.add(message)
+            db.session.commit()
+            return '% r' % User.query.filter_by(id=user_id).first()  
 
     def __repr__(self):
         return '<Message %r>' % self.id
