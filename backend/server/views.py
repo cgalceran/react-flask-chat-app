@@ -1,4 +1,4 @@
-from server import app, db, socketio
+from server import app, socketio
 from flask import request
 from .models import User, Messages
 import bcrypt
@@ -59,6 +59,15 @@ def message_create():
     email = request.args.get('email')
     user_id = (handleSingleUsers(email))['_id']
     return Messages.create_message(message, user_id)
+
+
+# ====================================================
+# Login
+# ====================================================
+
+@app.get('/api/login')
+def handle_login():
+    return 'login'
 
 
 
