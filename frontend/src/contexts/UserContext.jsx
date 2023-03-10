@@ -6,7 +6,7 @@ const UserContext = createContext(null);
 export const UserContextProvider = ({ children }) => {
   const [userReg, setUserReg] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const [isAuthorized, setIsAuthorized] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const register = async (firstname, lastname, email, password) => {
     const data = JSON.stringify({      
@@ -45,8 +45,9 @@ export const UserContextProvider = ({ children }) => {
     };
 
     await axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
+      .then(response => {
+        localStorage.setItem('token', response.data.access_token)
+        setIsAuthorized(true)
       })
       .catch(function (error) {
         console.log(error);
@@ -54,6 +55,7 @@ export const UserContextProvider = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.removeItem("token");
     setIsAuthorized(false);
   };
 
