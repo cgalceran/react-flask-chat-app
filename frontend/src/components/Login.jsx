@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import passlogo from "../images/pass.svg";
 import userlogo from "../images/user.svg";
 import { useNavigate } from "react-router-dom";
@@ -6,11 +6,12 @@ import UserContext from "../contexts/UserContext";
 import useSocket from "../hooks/useSocket";
 
 const Login = () => {
+  
   const { login } = useContext(UserContext);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    login(e.target.username.value, e.target.password.value);
+    login(e.target.email.value, e.target.password.value);
     e.target.reset();
   };
 
@@ -41,7 +42,7 @@ const Login = () => {
           />
           <input
             onChange={(e) => e.target.value}
-            id="username"
+            id="email"
             placeholder="Email"
             className="border-none bg-[#171717] p-2 text-[#d3d3d3] outline-none"
             type="text"

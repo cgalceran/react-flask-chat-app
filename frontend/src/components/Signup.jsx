@@ -5,11 +5,17 @@ import userlogo from "../images/user.svg";
 import { FaCaretRight } from "react-icons/fa";
 
 const Signup = () => {
-  const { register, login } = useContext(UserContext);
+  const { register } = useContext(UserContext);
+
+  const handleRegistration = (email, firstname, lastname, password) => {
+   const modifiedFirstName = String(firstname).toLowerCase().charAt(0).toUpperCase() + String(firstname).toLowerCase().slice(1);
+   const modifiedLastName = String(firstname).toLowerCase().charAt(0).toUpperCase() + String(firstname).toLowerCase().slice(1);
+   return register(email, modifiedFirstName, modifiedLastName, password)
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    register(
+    handleRegistration(
       e.target.email.value,
       e.target.firstname.value,
       e.target.lastname.value,

@@ -1,7 +1,11 @@
 from server import app, socketio
-from flask import request
+from flask import request, jsonify
 from .models import User, Messages
 import bcrypt
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 
 
@@ -26,7 +30,7 @@ def user_create():
     password = request.args.get('password')
     encoded_password = password.encode('utf-8')
     hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
-    return User.create_user(firstname, lastname, email, hashed_password)
+    return User.create_user(firstname, lastname, email, hashed_password.decode('utf8'))
 
 # Get list of users
 @app.get('/api/users')
@@ -36,12 +40,12 @@ def handle_users():
 
 # Get Individual user
 @app.get('/api/users/<email>')
-def handleSingleUsers(email):
+def handle_single_user(email):
     user = User.get_user(email)
     if user != 'User does not exist':
         return user
     else:
-        return 'User does not exist', 404
+        return 401
 
 # ====================================================
 # Messages
@@ -57,7 +61,7 @@ def handle_messages():
 def message_create():
     message = request.args.get('message')
     email = request.args.get('email')
-    user_id = (handleSingleUsers(email))['_id']
+    user_id = (handle_single_user(email))['_id']
     return Messages.create_message(message, user_id)
 
 
@@ -65,13 +69,34 @@ def message_create():
 # Login
 # ====================================================
 
-@app.get('/api/login')
+@app.post('/api/login')
 def handle_login():
-    return 'login'
+    email = request.json.get('email')
+    password = str(request.json.get('password'))
+    user = handle_single_user(email)
+    if user is not 401:
+        stored_password = str(user['password'])
+    else:
+        return "User not found"
+    if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):
+        access_token = create_access_token(identity=email)
+        return jsonify(access_token=access_token)
+    else:
+        return "Incorrect password"
 
+@app.post('/api/token')
+def create_token():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    if email != "test@test.com" or password != "test":
+        return jsonify({"msg": "Bad username or password"}), 401
+    
 
 
 # Test = receive message from hook in Login app on Client
 @socketio.on('message')
 def handle_message(data):
     print('received message: ' + data)
+
+
+
