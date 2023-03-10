@@ -8,17 +8,25 @@ export const UserContextProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(null);
 
-  const register = (firstname, lastname, email, password) => {
-    console.log(
-      "Email",
-      email,
-      "Firstname:",
-      firstname,
-      "Lastname:",
-      lastname,
-      "Password:",
-      password
-    );
+  const register = async (firstname, lastname, email, password) => {
+    const data = JSON.stringify({      
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password
+    });
+    console.log(data)
+    const config = {
+      method: "post",
+      url: "/api/users/create",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    const response = axios(config)
+    return response;
   };
 
   const login = async (email, password) => {

@@ -24,13 +24,13 @@ from flask_jwt_extended import jwt_required
 # Create User
 @app.post("/api/users/create")
 def user_create():
-    email = request.args.get('email')
-    firstname = request.args.get('firstname')
-    lastname = request.args.get('lastname')
-    password = request.args.get('password')
+    firstname = request.json.get('firstname')
+    lastname = request.json.get('lastname')
+    email = request.json.get('email')
+    password = request.json.get('password')
     encoded_password = password.encode('utf-8')
     hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
-    return User.create_user(firstname, lastname, email, hashed_password.decode('utf8'))
+    return User.create_user(firstname, lastname, email, hashed_password.decode('utf8')) #had to decode hashed password to insert in db
 
 # Get list of users
 @app.get('/api/users')
@@ -74,7 +74,7 @@ def handle_login():
     email = request.json.get('email')
     password = str(request.json.get('password'))
     user = handle_single_user(email)
-    if user is not 401:
+    if user != 401:
         stored_password = str(user['password'])
     else:
         return "User not found"
@@ -83,13 +83,6 @@ def handle_login():
         return jsonify(access_token=access_token)
     else:
         return "Incorrect password"
-
-@app.post('/api/token')
-def create_token():
-    email = request.json.get('email')
-    password = request.json.get('password')
-    if email != "test@test.com" or password != "test":
-        return jsonify({"msg": "Bad username or password"}), 401
     
 
 

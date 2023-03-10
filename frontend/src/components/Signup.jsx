@@ -1,24 +1,35 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import passlogo from "../images/pass.svg";
 import userlogo from "../images/user.svg";
 import { FaCaretRight } from "react-icons/fa";
 
 const Signup = () => {
+  const [alert, setAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
   const { register } = useContext(UserContext);
 
-  const handleRegistration = (email, firstname, lastname, password) => {
-   const modifiedFirstName = String(firstname).toLowerCase().charAt(0).toUpperCase() + String(firstname).toLowerCase().slice(1);
-   const modifiedLastName = String(firstname).toLowerCase().charAt(0).toUpperCase() + String(firstname).toLowerCase().slice(1);
-   return register(email, modifiedFirstName, modifiedLastName, password)
-  };
+  const navigate = useNavigate();
+
+  const handleRegistration = async (firstname, lastname, email, password) => {
+    const modifiedFirstName =
+      String(firstname).toLowerCase().charAt(0).toUpperCase() +
+      String(firstname).toLowerCase().slice(1);
+    const modifiedLastName =
+      String(lastname).toLowerCase().charAt(0).toUpperCase() +
+      String(lastname).toLowerCase().slice(1);
+    const response = await register(modifiedFirstName, modifiedLastName, email, password)
+    response.data == "User already exists" ? (setAlertText("Email already exists"), setAlert(true)) : navigate("/");
+  }   
+
 
   const onSubmit = (e) => {
     e.preventDefault();
     handleRegistration(
-      e.target.email.value,
       e.target.firstname.value,
       e.target.lastname.value,
+      e.target.email.value,
       e.target.password.value
     );
     e.target.reset();
@@ -95,7 +106,13 @@ const Signup = () => {
               autoComplete="off"
             ></input>
           </div>
-          <p className="text-white">Password maximum 8 characters</p>
+          {alert ? (
+            <p className="text-center text-white">{alertText}</p>
+          ) : (
+            <p className="text-center text-white">
+              Password maximum 8 characters
+            </p>
+          )}
 
           <div className=" m-10 flex flex-row justify-center gap-3">
             <button

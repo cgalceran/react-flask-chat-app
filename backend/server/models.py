@@ -57,7 +57,7 @@ class User(db.Model):
                 print('Created User:', firstname, 'with email:',email)
                 return '% r' % User.query.filter_by(email=email).first()                         
             else:
-                return 'User already exists', 500    
+                return 'User already exists'    
 
     def __repr__(self):
         return '<User %r>' % self.firstname
