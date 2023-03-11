@@ -6,16 +6,20 @@ import UserContext from "../contexts/UserContext";
 import useSocket from "../hooks/useSocket";
 
 const Login = () => {
+  const { login, isAuthorized } = useContext(UserContext);
+  const navigate = useNavigate();
   
-  const { login } = useContext(UserContext);
+  useEffect(() => {
+    if (isAuthorized == true) {
+      navigate('/chat')
+    }
+  }, [isAuthorized])
 
   const onSubmit = (e) => {
     e.preventDefault();
     login(e.target.email.value, e.target.password.value);
     e.target.reset();
   };
-
-  const navigate = useNavigate();
 
   const navigateToSignup = () => {
     navigate("/signup");
