@@ -77,7 +77,7 @@ class Messages(db.Model):
             dict = {
                 '_id': element.id,
                 'message': element.message,
-                'user_id': element.user_id,
+                'username': User.query.filter_by(id=element.user_id).first().firstname + " " +User.query.filter_by(id=element.user_id).first().lastname,
                 'created_at': element.created_at.strftime("%m/%d/%Y-%H:%M:%S")
             }
             message.append(dict)

@@ -4,6 +4,7 @@ import axios from "axios";
 const UserContext = createContext(null);
 
 export const UserContextProvider = ({ children }) => {
+  const [loggedInUsers, setLoggedInUsers] = useState([])
   const [userInfo, setUserInfo] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
@@ -59,6 +60,8 @@ export const UserContextProvider = ({ children }) => {
   };
 
   const value = {
+    loggedInUsers,
+    setLoggedInUsers,
     userInfo,
     setUserInfo,
     isAuthorized,

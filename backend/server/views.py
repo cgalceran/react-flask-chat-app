@@ -7,7 +7,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
-
+logged_in_users = []
 
 # ====================================================
 # Static Serving
@@ -32,13 +32,12 @@ def user_create():
     hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
     return User.create_user(firstname, lastname, email, hashed_password.decode('utf8')) #had to decode hashed password to insert in db
 
-# Get list of users
+# Get list of users from db
 @app.get('/api/users')
 def handle_users():
     return User.get_users()
 
-
-# Get Individual user
+# Get Individual user from db
 @app.get('/api/users/<email>')
 def handle_single_user(email):
     user = User.get_user(email)
@@ -51,12 +50,12 @@ def handle_single_user(email):
 # Messages
 # ====================================================
 
+# Get all messages from db
 @app.get('/api/messages')
 def handle_messages():
     return Messages.get_messages()
 
-
-
+#create a message and save on db
 @app.post('/api/messages')
 def message_create():
     message = request.args.get('message')
@@ -80,11 +79,21 @@ def handle_login():
         return "User not found"
     if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):
         access_token = create_access_token(identity=email)
+        log_user = {
+            "firstname": user['firstname'],
+            "lastname": user['lastname'],
+            "email": user['email'], 
+        }
+        logged_in_users.append(log_user)
         return jsonify(access_token=access_token)
     else:
         return "Incorrect password"
     
-
+#Get list of active users from array
+@jwt_required()
+@app.get('/api/users/active')
+def handle_logged_users():
+    return logged_in_users
 
 # Test = receive message from hook in Login app on Client
 @socketio.on('message')
