@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect} from "react";
 import passlogo from "../images/pass.svg";
 import userlogo from "../images/user.svg";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,14 @@ import UserContext from "../contexts/UserContext";
 import useSocket from "../hooks/useSocket";
 
 const Login = () => {
-  const { login, isAuthorized } = useContext(UserContext);
+  const {
+    login,
+    isAuthorized,
+    alertLogin,
+    setAlertLogin,
+    alertTextLogin,
+    setAlertTextLogin,
+  } = useContext(UserContext);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -67,7 +74,11 @@ const Login = () => {
             type="password"
           ></input>
         </div>
-
+        {alertLogin ? (
+          <p className="text-center text-white">{alertTextLogin}</p>
+        ) : (
+          <p className="text-center text-white">Please enter your password</p>
+        )}
         <div className=" m-10 flex flex-row justify-center gap-3">
           <button
             type="submit"

@@ -51,6 +51,7 @@ def handle_single_user(email):
 # ====================================================
 
 # Get all messages from db
+@jwt_required()
 @app.get('/api/messages')
 def handle_messages():
     return Messages.get_messages()

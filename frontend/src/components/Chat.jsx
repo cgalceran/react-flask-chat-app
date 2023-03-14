@@ -18,7 +18,7 @@ const Chat = () => {
       .then((response) => {
         setLoggedInUsers(response.data);
       });
-    axios.get("/api/messages").then((response) => {
+    axios.get("/api/messages", opts).then((response) => {
       setMessages(response.data)
     });
   }, [])

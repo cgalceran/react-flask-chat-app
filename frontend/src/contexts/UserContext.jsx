@@ -4,18 +4,20 @@ import axios from "axios";
 const UserContext = createContext(null);
 
 export const UserContextProvider = ({ children }) => {
-  const [loggedInUsers, setLoggedInUsers] = useState([])
+  const [loggedInUsers, setLoggedInUsers] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [alertLogin, setAlertLogin] = useState(false);
+  const [alertTextLogin, setAlertTextLogin] = useState("");
 
   const register = async (firstname, lastname, email, password) => {
-    const data = JSON.stringify({      
+    const data = JSON.stringify({
       firstname: firstname,
       lastname: lastname,
       email: email,
-      password: password
+      password: password,
     });
-    console.log(data)
+    console.log(data);
     const config = {
       method: "post",
       url: "/api/users/create",
@@ -24,12 +26,11 @@ export const UserContextProvider = ({ children }) => {
       },
       data: data,
     };
-
-    const response = axios(config)
+    const response = axios(config);
     return response;
   };
 
-  const login = async (email, password) => {
+  const login = (email, password) => {
     const data = JSON.stringify({
       email: email,
       password: password,
@@ -44,10 +45,18 @@ export const UserContextProvider = ({ children }) => {
       data: data,
     };
 
-    await axios(config)
-      .then(response => {
-        localStorage.setItem('token', response.data.access_token)
-        setIsAuthorized(true)
+    axios(config)
+      .then((response) => {
+        if (response.data == "User not found") {
+          setAlertTextLogin(response.data)
+          setAlertLogin(true)
+        } else if (response.data == "Incorrect password") {
+          setAlertTextLogin(response.data);
+          setAlertLogin(true);
+        } else {
+          localStorage.setItem("token", response.data.access_token);
+          setIsAuthorized(true);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -60,6 +69,10 @@ export const UserContextProvider = ({ children }) => {
   };
 
   const value = {
+    alertLogin,
+    setAlertLogin,
+    alertTextLogin,
+    setAlertTextLogin,
     loggedInUsers,
     setLoggedInUsers,
     userInfo,
