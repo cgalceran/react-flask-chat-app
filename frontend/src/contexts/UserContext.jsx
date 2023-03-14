@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
+import socket from "../utils/socket";
 
 const UserContext = createContext(null);
 
@@ -54,8 +55,19 @@ export const UserContextProvider = ({ children }) => {
           setAlertTextLogin(response.data);
           setAlertLogin(true);
         } else {
+          socket.connect();
+          socket.emit("hello this is Carlos from UserContext");
           localStorage.setItem("token", response.data.access_token);
           setIsAuthorized(true);
+          const opts = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          };
+          axios.get(`/api/users/${email}`, opts).then((response) => {
+            setUserInfo(response.data)
+            console.log("Here's user context :",response.data);
+          });
         }
       })
       .catch(function (error) {

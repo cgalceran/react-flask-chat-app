@@ -19,6 +19,8 @@ const Login = () => {
   useEffect(() => {
     if (isAuthorized == true) {
       navigate('/chat')
+    } else if (isAuthorized == true) {
+      navigate('/login')
     }
   }, [isAuthorized])
 

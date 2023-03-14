@@ -59,8 +59,8 @@ def handle_messages():
 #create a message and save on db
 @app.post('/api/messages')
 def message_create():
-    message = request.args.get('message')
-    email = request.args.get('email')
+    message = request.json.get('message')
+    email = request.json.get('email')
     user_id = (handle_single_user(email))['_id']
     return Messages.create_message(message, user_id)
 
@@ -101,5 +101,9 @@ def handle_logged_users():
 def handle_message(data):
     print('received message: ' + data)
 
+
+@socketio.on('connection')
+def on_connection():
+    print('a user connected')
 
 
