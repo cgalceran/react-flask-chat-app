@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route} from "react-router-dom"
 import useDarkMode from "./hooks/useDarkMode";
 import { UserContextProvider } from "./contexts/UserContext";
 import { BsSun, BsMoonFill } from "react-icons/bs";
+import Bubble from "./components/Bubble";
 
 
 import Login from './components/Login'
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/chat" element={<Chat />} />
+                <Route path="/bubble" element={<Bubble />} />
               </Route>
             </Routes>
           </BrowserRouter>

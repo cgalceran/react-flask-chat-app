@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from "../contexts/UserContext";
 import axios from 'axios';
 import socket from '../utils/socket';
+import Bubble from './Bubble';
+import { BsFillCircleFill } from "react-icons/bs";
 
 
 const Chat = () => {
@@ -21,9 +23,7 @@ const Chat = () => {
     });
   }
 
-  socket.on('updatedMessages', (data) => {
-    console.log(data)
-  })
+  // socket.on('updatedMessages',getMessages())
   
   // Initial data to chat - (Active Users and Messages)
   useEffect(() => {
@@ -90,13 +90,14 @@ const Chat = () => {
         </button>
       </div>
 
-      <div className="grid h-96 grid-cols-2 gap-1">
+      <div className="grid h-96 grid-cols-2 gap-1 max-w-3xl">
         <div className="rounded-l-3xl bg-[#171717] ">
-          <ul className="p-4 text-xs text-white">
+          <div className='text-white text-center mt-2'><span>Online Users</span></div>
+          <ul className="p-4 text-s text-white">
             {loggedInUsers &&
               loggedInUsers.map((user, i) => (
-                <li key={i}>
-                  {user.firstname} {user.lastname}{" "}
+                <li key={i} className="flex flex-row m-1">
+                 < BsFillCircleFill size="12" className='mt-1.5 mr-1 text-green-500'/> {user.firstname} {user.lastname}{" "}
                 </li>
               ))}
           </ul>
@@ -104,12 +105,11 @@ const Chat = () => {
 
         <div>
           <div className="h-96 overflow-y-auto rounded-tr-3xl bg-[#171717]">
-            <ul className="pl-2 text-xs text-white">
+            <ul className="pl-2 text-s text-white">
               {messages &&
-                messages.map((element, i) => (
-                  <li key={i}>
-                    {element.username}: {element.message}
-                  </li>
+                messages.map((element) => (
+                  <Bubble data={element} key={element._id} />
+                  
                 ))}
             </ul>
           </div>
@@ -129,6 +129,7 @@ const Chat = () => {
               send
             </button>
           </form>
+          
         </div>
       </div>
     </main>
