@@ -75,7 +75,23 @@ export const UserContextProvider = ({ children }) => {
       });
   };
 
-  const logout = () => {
+  const logout = async () => {const data = JSON.stringify({
+    email: userInfo.email,
+  });
+
+  const config = {
+    method: "post",
+    url: "/api/login",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+  await axios(config)
+  .then(response => {
+    console.log(response.data)
+  })
+
     localStorage.removeItem("token");
     setIsAuthorized(false);
   };

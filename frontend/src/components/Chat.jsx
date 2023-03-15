@@ -10,6 +10,22 @@ const Chat = () => {
   const navigate = useNavigate();
   const { userInfo, loggedInUsers, setLoggedInUsers, logout } = useContext(UserContext);
 
+  const getMessages = () => {
+    const opts = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    }
+    axios.get("/api/messages", opts).then((response) => {
+      setMessages(response.data);
+    });
+  }
+
+  socket.on('updatedMessages', (data) => {
+    console.log(data)
+  })
+  
+  // Initial data to chat - (Active Users and Messages)
   useEffect(() => {
     const opts = {
       headers: {
@@ -21,9 +37,7 @@ const Chat = () => {
       .then((response) => {
         setLoggedInUsers(response.data);
       });
-    axios.get("/api/messages", opts).then((response) => {
-      setMessages(response.data)
-    });
+    getMessages()
   }, [])
 
   const onSubmit = (e) => {
@@ -48,8 +62,9 @@ const Chat = () => {
      };
      axios(config)
       .then((response) => {
-        console.log(response)
+        console.log(response.data)
       })
+  socket.emit('created message')    
   }
 
   const handleLogout = () => {
@@ -77,7 +92,7 @@ const Chat = () => {
 
       <div className="grid h-96 grid-cols-2 gap-1">
         <div className="rounded-l-3xl bg-[#171717] ">
-          <ul className="text-white p-4">
+          <ul className="p-4 text-xs text-white">
             {loggedInUsers &&
               loggedInUsers.map((user, i) => (
                 <li key={i}>
@@ -88,8 +103,8 @@ const Chat = () => {
         </div>
 
         <div>
-          <div className="overflow-y-auto rounded-tr-3xl bg-[#171717] h-96">
-            <ul className='text-white pl-2'>
+          <div className="h-96 overflow-y-auto rounded-tr-3xl bg-[#171717]">
+            <ul className="pl-2 text-xs text-white">
               {messages &&
                 messages.map((element, i) => (
                   <li key={i}>
@@ -99,10 +114,7 @@ const Chat = () => {
             </ul>
           </div>
 
-          <form
-            onSubmit={onSubmit}
-            className="grid h-10 grid-cols-3 gap-1 "
-          >
+          <form onSubmit={onSubmit} className="grid h-10 grid-cols-3 gap-1 ">
             <input
               onChange={(e) => e.target.value}
               id="message"
@@ -110,7 +122,10 @@ const Chat = () => {
               className="col-span-2 px-4"
               placeholder=" Write your message"
             ></input>
-            <button type="submit" className="col-span-1 bg-white rounded-br-3xl">
+            <button
+              type="submit"
+              className="col-span-1 rounded-br-3xl bg-white"
+            >
               send
             </button>
           </form>

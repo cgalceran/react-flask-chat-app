@@ -32,6 +32,12 @@ def user_create():
     hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
     return User.create_user(firstname, lastname, email, hashed_password.decode('utf8')) #had to decode hashed password to insert in db
 
+#Get list of active users from array
+@jwt_required()
+@app.get('/api/users/active')
+def handle_logged_users():
+    return logged_in_users
+
 # Get list of users from db
 @app.get('/api/users')
 def handle_users():
@@ -51,7 +57,6 @@ def handle_single_user(email):
 # ====================================================
 
 # Get all messages from db
-@jwt_required()
 @app.get('/api/messages')
 def handle_messages():
     return Messages.get_messages()
@@ -66,7 +71,7 @@ def message_create():
 
 
 # ====================================================
-# Login
+# Login and Logout
 # ====================================================
 
 @app.post('/api/login')
@@ -90,20 +95,23 @@ def handle_login():
     else:
         return "Incorrect password"
     
-#Get list of active users from array
-@jwt_required()
-@app.get('/api/users/active')
-def handle_logged_users():
-    return logged_in_users
 
-# Test = receive message from hook in Login app on Client
-@socketio.on('message')
-def handle_message(data):
-    print('received message: ' + data)
+@app.post('/api/logout')
+def handle_logout():
+    email = request.json.get('email')
+    filteredList = logged_in_users(lambda x: x.get('email') != email, logged_in_users)
+    return filteredList
 
-
-@socketio.on('connection')
-def on_connection():
-    print('a user connected')
+     
+    
 
 
+# Listen for creation of messages
+@socketio.on('created message')
+def handle_created_message():
+    return handle_messages()
+
+# Retrive and broadcast messages to clients
+@socketio.on('created message')
+def send_updated_messages():
+    socketio.emit('updatedMessages', handle_created_message(), broadcast=True)
