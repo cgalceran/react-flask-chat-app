@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
 import socket from "../utils/socket";
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext(null);
 
@@ -55,8 +56,6 @@ export const UserContextProvider = ({ children }) => {
           setAlertTextLogin(response.data);
           setAlertLogin(true);
         } else {
-          socket.connect();
-          socket.emit("hello this is Carlos from UserContext");
           localStorage.setItem("token", response.data.access_token);
           setIsAuthorized(true);
           const opts = {
@@ -75,8 +74,10 @@ export const UserContextProvider = ({ children }) => {
       });
   };
 
-  const logout = async () => {const data = JSON.stringify({
-    email: userInfo.email,
+  const logout = async () => {
+    
+  const data = JSON.stringify({
+  email: userInfo.email,
   });
 
   const config = {
@@ -90,10 +91,11 @@ export const UserContextProvider = ({ children }) => {
   await axios(config)
   .then(response => {
     console.log(response.data)
-  })
-
     localStorage.removeItem("token");
     setIsAuthorized(false);
+  })
+
+    
   };
 
   const value = {
@@ -116,3 +118,5 @@ export const UserContextProvider = ({ children }) => {
 };
 
 export default UserContext;
+
+

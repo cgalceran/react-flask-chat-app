@@ -90,26 +90,33 @@ const Chat = () => {
         </button>
       </div>
 
-      <div className="grid h-96 grid-cols-2 gap-1 max-w-3xl">
+      <div className="grid h-96 max-w-3xl grid-cols-2 gap-1">
         <div className="rounded-l-3xl bg-[#171717] ">
-          <div className='text-white text-center mt-2'><span>Online Users</span></div>
-          <ul className="p-4 text-s text-white">
-            {loggedInUsers &&
-              loggedInUsers.map((user, i) => (
-                <li key={i} className="flex flex-row m-1">
-                 < BsFillCircleFill size="12" className='mt-1.5 mr-1 text-green-500'/> {user.firstname} {user.lastname}{" "}
-                </li>
-              ))}
-          </ul>
-        </div>
+          <div className="mt-2 text-center text-white">
+            <span>Online Users</span>
+          </div>
+         
+            <ul className="text-s p-4 text-white">
+              {loggedInUsers &&
+                loggedInUsers.map((user, i) => (
+                  <li key={i} className="m-1 flex flex-row">
+                    <BsFillCircleFill
+                      size="12"
+                      className="mt-1.5 mr-1 text-green-500"
+                    />{" "}
+                    {user.firstname} {user.lastname}{" "}
+                  </li>
+                ))}
+            </ul>
+          </div>
+
 
         <div>
           <div className="h-96 overflow-y-auto rounded-tr-3xl bg-[#171717]">
-            <ul className="pl-2 text-s text-white">
+            <ul className="text-s pl-2 text-white">
               {messages &&
                 messages.map((element) => (
                   <Bubble data={element} key={element._id} />
-                  
                 ))}
             </ul>
           </div>
@@ -129,7 +136,6 @@ const Chat = () => {
               send
             </button>
           </form>
-          
         </div>
       </div>
     </main>

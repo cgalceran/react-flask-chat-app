@@ -10,9 +10,7 @@ const Login = () => {
     login,
     isAuthorized,
     alertLogin,
-    setAlertLogin,
     alertTextLogin,
-    setAlertTextLogin,
   } = useContext(UserContext);
   const navigate = useNavigate();
   

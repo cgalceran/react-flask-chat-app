@@ -99,8 +99,11 @@ def handle_login():
 @app.post('/api/logout')
 def handle_logout():
     email = request.json.get('email')
-    filteredList = logged_in_users(lambda x: x.get('email') != email, logged_in_users)
-    return filteredList
+    for i in range(len(logged_in_users)):
+        if logged_in_users[i]['email'] == email:
+            del logged_in_users[i]
+            break
+    return logged_in_users
 
      
     
