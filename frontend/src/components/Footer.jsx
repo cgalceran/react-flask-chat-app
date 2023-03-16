@@ -5,7 +5,8 @@ export const Footer = () => {
         <li>
           <span className="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
             {" "}
-            Made with &#9829; by Carlos Galceran
+            Made with <span className="text-fuchsia-700"> &#9829; </span> by
+            Carlos Galceran
           </span>
         </li>
         <li>
@@ -15,7 +16,7 @@ export const Footer = () => {
             rel="noreferrer"
             className=" px-9 hover:underline"
           >
-            Contact
+            <span className="text-indigo-500">Contact</span>
           </a>
         </li>
       </ul>
