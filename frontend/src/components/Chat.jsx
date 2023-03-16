@@ -30,11 +30,9 @@ const Chat = () => {
   useEffect(() => {
     socket.on("receive_db_messages", (data) => {
       setMessages(data);
-      console.log(data);
     });
     socket.on("logged_in_users", (users) => {
       setLoggedInUsers(users);
-      console.log(users);
     });
   }, [socket]);
  // Scroll to bottom in chat automatically every time messages is updated
@@ -70,7 +68,6 @@ const Chat = () => {
     };
     axios(config).then((response) => {
       socket.emit("created a message");
-      console.log(response.data);
     });
   };
 

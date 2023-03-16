@@ -18,7 +18,6 @@ export const UserContextProvider = ({ children }) => {
       email: email,
       password: password,
     });
-    console.log(data);
     const config = {
       method: "post",
       url: "/api/users/create",
@@ -78,7 +77,7 @@ export const UserContextProvider = ({ children }) => {
   const data = JSON.stringify({
   email: userInfo.email,
   });
-  console.log("This is from userContext logout function: ", data)
+ 
 
   const config = {
     method: "post",
@@ -91,7 +90,6 @@ export const UserContextProvider = ({ children }) => {
   };
   const response = axios(config)
     if (response) {
-      console.log(response)
       localStorage.removeItem("token");
       setIsAuthorized(false);
       socket.disconnect();

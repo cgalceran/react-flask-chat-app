@@ -3,7 +3,7 @@ import socket from '../utils/socket'
 import UserContext from "../contexts/UserContext";
 
 
-// This is just an idea... craete a reusable hook for every connection... do not know if possible.
+// This is just an idea... create a reusable hook for every connection... do not know if possible.
 
 const useSocket = () => {
     const {setUserInfo, setIsAuthorized} = useContext(UserContext)
