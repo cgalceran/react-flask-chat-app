@@ -81,40 +81,42 @@ const Chat = () => {
   };
 
   return (
-    <main>
+    <main className="drop-shadow-2xl">
       <div className="flex flex-row justify-between">
         {userInfo && (
-          <p className="pt-4 text-black dark:text-[#e8e8e8]">
+          <p className="pt-1 pl-3 text-black dark:text-[#e8e8e8]">
             Hi, {userInfo.firstname}!
           </p>
         )}
         <button
           onClick={handleLogout}
-          className="mb-1 rounded-lg border-none bg-[#252525] p-2 px-3 text-white outline-none ease-in-out hover:bg-black hover:text-white"
+          className="mb-1 rounded-lg border-none bg-[#252525] p-1 px-2 text-white outline-none drop-shadow-xl ease-in-out hover:bg-black hover:text-white dark:bg-[#e8e8e8] dark:text-black"
         >
           {" "}
           Logout
         </button>
       </div>
 
-      <div className="grid h-96 max-w-3xl grid-cols-2 gap-1">
+      <div className="grid h-96 max-w-3xl grid-cols-2 gap-0.5">
         <div className="rounded-l-3xl bg-[#171717] ">
-          <div className="mt-2 text-center text-white">
-            <span>Online Users</span>
+          
+            <div className="mt-2 text-center text-gray-300 underline-offset-auto">
+              <span>Online Users</span>
+            </div>
+            <div className="m-4 p-1 shadow-inner shadow-black h-4/5">
+            <div className="text-s grid grid-cols-1 divide-y divide-gray-700 text-gray-300">
+              {loggedInUsers &&
+                loggedInUsers.map((user, i) => (
+                  <div key={i} className="mt-1 flex flex-row justify-start">
+                    <BsFillCircleFill
+                      size="12"
+                      className="mt-1.5 mr-2 text-green-400 drop-shadow-xl shadow-white"
+                    />{" "}
+                    {user.firstname} {user.lastname}{" "}
+                  </div>
+                ))}
+            </div>
           </div>
-
-          <ul className="text-s p-4 text-white">
-            {loggedInUsers &&
-              loggedInUsers.map((user, i) => (
-                <li key={i} className="m-1 flex flex-row">
-                  <BsFillCircleFill
-                    size="12"
-                    className="mt-1.5 mr-1 text-green-500"
-                  />{" "}
-                  {user.firstname} {user.lastname}{" "}
-                </li>
-              ))}
-          </ul>
         </div>
 
         <div>
@@ -127,19 +129,19 @@ const Chat = () => {
             </ul>
           </div>
 
-          <form onSubmit={onSubmit} className="grid h-10 grid-cols-3 gap-1 ">
+          <form onSubmit={onSubmit} className="grid grid-cols-3 gap-0.5">
             <input
               onChange={(e) => e.target.value}
               id="message"
               type="text"
-              className="col-span-2 px-4"
+              className="input-bordered input-accent placeholder-gray-400 shadow-inner shadow-gray-600 input-sm col-span-2 max-w-xs bg-gray-300 text-black"
               placeholder=" Write your message"
             ></input>
             <button
               type="submit"
-              className="col-span-1 rounded-br-3xl bg-white"
+              className="col-span-1 rounded-br-3xl bg-indigo-500"
             >
-              send
+              Send
             </button>
           </form>
         </div>

@@ -28,8 +28,13 @@ function App() {
           )}
         </span>
       </div>
-
-      <section className="-mt-14 flex h-full items-center justify-center">
+   
+      <section className="-mt-12 flex h-full flex-col items-center justify-center">
+        <div className="m-10 mx-auto flex max-w-3xl flex-col">
+          <h1 className="font-inter mt-1 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-center text-4xl font-black uppercase tracking-tighter text-transparent sm:text-5xl lg:text-7xl">
+            Awesome Chat!
+          </h1>
+        </div>
         <UserContextProvider>
           <BrowserRouter>
             <Routes>

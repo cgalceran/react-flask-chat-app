@@ -15,7 +15,9 @@ const Bubble = ({ data }) => {
               {data.created_at.split("-")[1].slice(0, 5)}
             </time>
           </div>
-          <div className="chat-bubble break-before-right bg-green-700">{data.message}</div>
+          <div className="chat-bubble break-before-right bg-indigo-400 font-light">
+            {data.message}
+          </div>
         </div>
       ) : (
         <div key={data._id} className="chat chat-start">
@@ -26,7 +28,9 @@ const Bubble = ({ data }) => {
               {data.created_at.split("-")[1].slice(0, 5)}
             </time>
           </div>
-          <div className="chat-bubble break-before-right">{data.message}</div>
+          <div className="chat-bubble break-before-right font-light">
+            {data.message}
+          </div>
         </div>
       )}
     </>
