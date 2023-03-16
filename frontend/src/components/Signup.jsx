@@ -103,6 +103,7 @@ const Signup = () => {
               placeholder="Password"
               className="border-none bg-[#171717] p-2 text-[#d3d3d3] outline-none"
               type="password"
+              maxLength="8"
               autoComplete="off"
             ></input>
           </div>

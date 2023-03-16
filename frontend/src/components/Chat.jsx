@@ -99,14 +99,14 @@ const Chat = () => {
           className="mb-1 rounded-lg border-none bg-[#252525] p-1 px-2 text-white outline-none drop-shadow-xl ease-in-out hover:bg-black hover:text-white dark:bg-indigo-500 dark:text-black hover:dark:bg-indigo-400"
         >
           {" "}
-          Logout
+          <span className="text-sm font-light p-1">Sign out</span>  
         </button>
       </div>
 
       <div className="grid h-96 max-w-3xl grid-cols-45/60 gap-0.5">
         <div className="rounded-l-3xl bg-[#171717]">
-          <div className="mt-2 text-center text-gray-300 underline-offset-auto">
-            <span>Online Users</span>
+          <div className="mt-2 -mb-3 text-center text-gray-500 underline-offset-auto">
+            <span className="text-xs uppercase">Online Users</span>
           </div>
           <div className="m-4 h-4/5 p-1 shadow-inner shadow-black">
             <div className="text-s grid grid-cols-1 divide-y divide-gray-700 text-gray-300">
@@ -140,12 +140,13 @@ const Chat = () => {
               onChange={(e) => e.target.value}
               id="message"
               type="text"
-              className="input-bordered input-accent input-sm col-span-2 max-w-xs bg-gray-300 text-black placeholder-gray-400 shadow-inner shadow-gray-600"
+              className="input-bordered font-light input-accent input-sm col-span-2 max-w-xs bg-gray-300 text-black placeholder-gray-400 shadow-inner shadow-gray-600"
               placeholder=" Write your message"
+              autoComplete="off"
             ></input>
             <button
               type="submit"
-              className="col-span-1 rounded-br-3xl bg-indigo-500 hover:dark:bg-indigo-400 hover:bg-indigo-400"
+              className="col-span-1 font-light rounded-br-3xl bg-indigo-500 hover:dark:bg-indigo-400 hover:bg-indigo-400"
             >
               Send
             </button>
