@@ -60,7 +60,7 @@ export const UserContextProvider = ({ children }) => {
           setIsAuthorized(true);
           const opts = {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              'Authorization': `Bearer ${localStorage.getItem("token")}`,
             },
           };
           axios.get(`/api/users/${email}`, opts).then((response) => {
@@ -85,6 +85,7 @@ export const UserContextProvider = ({ children }) => {
     url: "/api/logout",
     headers: {
       "Content-Type": "application/json",
+      'Authorization': `Bearer ${localStorage.getItem("token")}`,
     },
     data: data,
   };

@@ -38,11 +38,13 @@ def handle_logged_users():
     return logged_in_users
 
 # Get list of users from db
+
 @app.get('/api/users')
 def handle_users():
     return User.get_users()
 
 # Get Individual user from db
+@jwt_required(optional=True)
 @app.get('/api/users/<email>')
 def handle_single_user(email):
     user = User.get_user(email)
@@ -56,11 +58,13 @@ def handle_single_user(email):
 # ====================================================
 
 # Get all messages from db
+@jwt_required()
 @app.get('/api/messages')
 def handle_messages():
     return Messages.get_messages()
 
 #create a message and save on db
+@jwt_required()
 @app.post('/api/messages')
 def message_create():
     message = request.json.get('message')
@@ -95,7 +99,7 @@ def handle_login():
     else:
         return "Incorrect password"
     
-
+@jwt_required()
 @app.post('/api/logout')
 def handle_logout():
     email = request.json.get('email')
@@ -117,7 +121,7 @@ def handle_connection():
 
 @socketio.on('created a message')
 def handle_created_message():
-    data = Messages.get_messages()
+    data = Messages.get_messages() # I avoided using JWTs on this one
     socketio.emit('receive_db_messages', data, broadcast=True)
 
     
