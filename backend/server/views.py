@@ -124,4 +124,8 @@ def handle_created_message():
     data = Messages.get_messages() # I avoided using JWTs on this one
     socketio.emit('receive_db_messages', data, broadcast=True)
 
+@socketio.on("disconnect")
+def handle_disconnect():
+    print("User Disconnected: ", request.sid)
+
     

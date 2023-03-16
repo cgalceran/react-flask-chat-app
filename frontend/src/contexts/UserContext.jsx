@@ -94,6 +94,7 @@ export const UserContextProvider = ({ children }) => {
       console.log(response)
       localStorage.removeItem("token");
       setIsAuthorized(false);
+      socket.disconnect();
     } 
   };
 
