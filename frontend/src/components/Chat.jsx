@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import axios from "axios";
@@ -8,6 +8,7 @@ import { BsFillCircleFill } from "react-icons/bs";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
+  const scrollToBottom = useRef(null)
   const navigate = useNavigate();
   const { userInfo, loggedInUsers, setLoggedInUsers, logout } =
     useContext(UserContext);
@@ -47,6 +48,13 @@ const Chat = () => {
       console.log(users);
     });
   }, [socket]);
+
+  useEffect(() => {
+    scrollToBottom.current?.scrollIntoView();
+  }, [messages])
+
+
+
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -90,15 +98,15 @@ const Chat = () => {
         )}
         <button
           onClick={handleLogout}
-          className="mb-1 rounded-lg border-none bg-[#252525] p-1 px-2 text-white outline-none drop-shadow-xl ease-in-out hover:bg-black hover:text-white dark:bg-[#e8e8e8] dark:text-black"
+          className="mb-1 rounded-lg border-none bg-[#252525] p-1 px-2 text-white outline-none drop-shadow-xl ease-in-out hover:bg-black hover:text-white dark:bg-indigo-500 dark:text-black"
         >
           {" "}
           Logout
         </button>
       </div>
 
-      <div className="grid h-96 max-w-3xl grid-cols-2 gap-0.5">
-        <div className="rounded-l-3xl bg-[#171717] ">
+      <div className="grid h-96 max-w-3xl grid-cols-45/60 gap-0.5">
+        <div className="rounded-l-3xl bg-[#171717]">
           
             <div className="mt-2 text-center text-gray-300 underline-offset-auto">
               <span>Online Users</span>
@@ -120,13 +128,14 @@ const Chat = () => {
         </div>
 
         <div>
-          <div className="h-96 overflow-y-auto rounded-tr-3xl bg-[#171717]">
-            <ul className="text-s pl-2 text-white">
+          <div className="h-96 overflow-y-auto scrollbar-hide rounded-tr-3xl bg-[#171717] ">
+            <div className="text-s pl-2 text-white">
               {messages &&
                 messages.map((element) => (
                   <Bubble data={element} key={element._id} />
                 ))}
-            </ul>
+            </div>
+            <div ref={scrollToBottom}/>
           </div>
 
           <form onSubmit={onSubmit} className="grid grid-cols-3 gap-0.5">
