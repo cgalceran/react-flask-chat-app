@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
 import socket from "../utils/socket";
-import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext(null);
 
@@ -51,6 +50,7 @@ export const UserContextProvider = ({ children }) => {
       .then((response) => {
         if (response.data == "User not found") {
           setAlertTextLogin(response.data)
+          socket.emit("login_user");
           setAlertLogin(true)
         } else if (response.data == "Incorrect password") {
           setAlertTextLogin(response.data);
@@ -74,28 +74,26 @@ export const UserContextProvider = ({ children }) => {
       });
   };
 
-  const logout = async () => {
-    
+  const logout = () => {   
   const data = JSON.stringify({
   email: userInfo.email,
   });
+  console.log("This is from userContext logout function: ", data)
 
   const config = {
     method: "post",
-    url: "/api/login",
+    url: "/api/logout",
     headers: {
       "Content-Type": "application/json",
     },
     data: data,
   };
-  await axios(config)
-  .then(response => {
-    console.log(response.data)
-    localStorage.removeItem("token");
-    setIsAuthorized(false);
-  })
-
-    
+  const response = axios(config)
+    if (response) {
+      console.log(response)
+      localStorage.removeItem("token");
+      setIsAuthorized(false);
+    } 
   };
 
   const value = {

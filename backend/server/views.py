@@ -3,6 +3,8 @@ from flask import request, jsonify
 from .models import User, Messages
 import bcrypt
 
+from flask_socketio import send, emit
+
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -91,6 +93,7 @@ def handle_login():
             "email": user['email'], 
         }
         logged_in_users.append(log_user)
+        socketio.emit('logged_in_users', logged_in_users, broadcast=True)
         return jsonify(access_token=access_token)
     else:
         return "Incorrect password"
@@ -102,19 +105,22 @@ def handle_logout():
     for i in range(len(logged_in_users)):
         if logged_in_users[i]['email'] == email:
             del logged_in_users[i]
-            break
+            break   
+    socketio.emit('logged_in_users', logged_in_users, broadcast=True)
     return logged_in_users
 
+
+# ====================================================
+# Websockets
+# ====================================================
      
-    
+@socketio.on("connect")
+def handle_connection():
+    print("User Connected: ", request.sid)
 
-
-# Listen for creation of messages
-@socketio.on('created message')
+@socketio.on('created a message')
 def handle_created_message():
-    return handle_messages()
+    data = Messages.get_messages()
+    socketio.emit('receive_db_messages', data, broadcast=True)
 
-# Retrive and broadcast messages to clients
-@socketio.on('created message')
-def send_updated_messages():
-    socketio.emit('updatedMessages', handle_created_message(), broadcast=True)
+    

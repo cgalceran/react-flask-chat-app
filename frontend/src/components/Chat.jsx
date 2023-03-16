@@ -1,44 +1,52 @@
-import React, {useContext, useEffect, useState }from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
-import axios from 'axios';
-import socket from '../utils/socket';
-import Bubble from './Bubble';
+import axios from "axios";
+import socket from "../utils/socket";
+import Bubble from "./Bubble";
 import { BsFillCircleFill } from "react-icons/bs";
 
-
 const Chat = () => {
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
-  const { userInfo, loggedInUsers, setLoggedInUsers, logout } = useContext(UserContext);
+  const { userInfo, loggedInUsers, setLoggedInUsers, logout } =
+    useContext(UserContext);
 
   const getMessages = () => {
     const opts = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }
-    }
+      },
+    };
     axios.get("/api/messages", opts).then((response) => {
       setMessages(response.data);
     });
-  }
+  };
 
-  // socket.on('updatedMessages',getMessages())
-  
   // Initial data to chat - (Active Users and Messages)
   useEffect(() => {
+    socket.connect(socket);
     const opts = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }
+      },
     };
-    axios
-      .get("/api/users/active", opts)
-      .then((response) => {
-        setLoggedInUsers(response.data);
-      });
-    getMessages()
-  }, [])
+    axios.get("/api/users/active", opts).then((response) => {
+      setLoggedInUsers(response.data);
+    });
+    getMessages();
+  }, []);
+
+  useEffect(() => {
+    socket.on("receive_db_messages", (data) => {
+      setMessages(data);
+      console.log(data);
+    });
+    socket.on("logged_in_users", (users) => {
+      setLoggedInUsers(users);
+      console.log(users);
+    });
+  }, [socket]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -47,32 +55,31 @@ const Chat = () => {
   };
 
   const createMessage = async (message) => {
-     const data = JSON.stringify({
-       message: message,
-       email: userInfo.email,
-     });
+    const data = JSON.stringify({
+      message: message,
+      email: userInfo.email,
+    });
 
-     const config = {
-       method: "post",
-       url: "/api/messages",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       data: data,
-     };
-     axios(config)
-      .then((response) => {
-        console.log(response.data)
-      })
-  socket.emit('created message')    
-  }
+    const config = {
+      method: "post",
+      url: "/api/messages",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    axios(config).then((response) => {
+      socket.emit("created a message");
+      console.log(response.data);
+    });
+  };
 
-  const handleLogout = () => {
-    logout()
-    navigate('/')
-  }
-  
-  
+  const handleLogout = async () => {
+    const run = await logout();
+    console.log("run constant: ", run )
+    navigate("/");
+  };
+
   return (
     <main>
       <div className="flex flex-row justify-between">
@@ -95,21 +102,20 @@ const Chat = () => {
           <div className="mt-2 text-center text-white">
             <span>Online Users</span>
           </div>
-         
-            <ul className="text-s p-4 text-white">
-              {loggedInUsers &&
-                loggedInUsers.map((user, i) => (
-                  <li key={i} className="m-1 flex flex-row">
-                    <BsFillCircleFill
-                      size="12"
-                      className="mt-1.5 mr-1 text-green-500"
-                    />{" "}
-                    {user.firstname} {user.lastname}{" "}
-                  </li>
-                ))}
-            </ul>
-          </div>
 
+          <ul className="text-s p-4 text-white">
+            {loggedInUsers &&
+              loggedInUsers.map((user, i) => (
+                <li key={i} className="m-1 flex flex-row">
+                  <BsFillCircleFill
+                    size="12"
+                    className="mt-1.5 mr-1 text-green-500"
+                  />{" "}
+                  {user.firstname} {user.lastname}{" "}
+                </li>
+              ))}
+          </ul>
+        </div>
 
         <div>
           <div className="h-96 overflow-y-auto rounded-tr-3xl bg-[#171717]">
@@ -140,6 +146,6 @@ const Chat = () => {
       </div>
     </main>
   );
-}
+};
 
-export default Chat
+export default Chat;
