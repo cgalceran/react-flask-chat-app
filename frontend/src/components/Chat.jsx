@@ -5,27 +5,31 @@ import axios from "axios";
 import socket from "../utils/socket";
 import Bubble from "./Bubble";
 import { BsFillCircleFill } from "react-icons/bs";
+import jwt_decode from "jwt-decode";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
+  const userData = useContext(UserContext);
+  
   const scrollToBottom = useRef(null)
   const navigate = useNavigate();
-  const { userInfo, loggedInUsers, setLoggedInUsers, logout } = useContext(UserContext);
 
 
   // Initial data to chat - (Active Users and Messages)
   useEffect(() => {
-    socket.connect(socket);
+    const decoded = jwt_decode(localStorage.getItem("token"));
+    socket.connect();
+    socket.emit('add_sid', decoded.sub)
     const opts = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     };
     axios.get("/api/users/active", opts).then((response) => {
-      setLoggedInUsers(response.data);
+      userData.setLoggedInUsers(response.data);
     });
     getMessages();
-  }, []);
+  }, [userData.userInfo]);
  // Listen for incoming socket messages
   useEffect(() => {
     socket.on("receive_db_messages", (data) => {
@@ -79,9 +83,15 @@ const Chat = () => {
 
   const handleLogout = async () => {
     const run = await logout();
-    console.log("run constant: ", run )
     navigate("/");
   };
+
+  
+  if (!userData) {
+    return <div> Loading...</div>
+  } 
+  const {userInfo, loggedInUsers, setLoggedInUsers, logout, token } = userData
+
 
   return (
     <main className="drop-shadow-2xl">

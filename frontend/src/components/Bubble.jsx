@@ -3,7 +3,14 @@ import UserContext from "../contexts/UserContext";
 
 
 const Bubble = ({ data }) => {
-    const { userInfo } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
+
+  if (!userInfo) {
+    return null
+  }
+
+
+
   return (
     <>
       {userInfo._id == data.user_id ? (

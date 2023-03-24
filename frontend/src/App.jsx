@@ -45,7 +45,6 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/chat" element={<Chat />} />
-                <Route path="/bubble" element={<Bubble />} />
               </Route>
             </Routes>
           </BrowserRouter>

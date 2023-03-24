@@ -91,9 +91,11 @@ def handle_login():
         log_user = {
             "firstname": user['firstname'],
             "lastname": user['lastname'],
-            "email": user['email'], 
+            "email": user['email'],
+            'sid': '', 
         }
         logged_in_users.append(log_user)
+        print('logged users in function 1')
         socketio.emit('logged_in_users', logged_in_users, broadcast=True)
         return jsonify(access_token=access_token)
     else:
@@ -106,7 +108,8 @@ def handle_logout():
     for i in range(len(logged_in_users)):
         if logged_in_users[i]['email'] == email:
             del logged_in_users[i]
-            break   
+            break
+    print('Print from logout function, logged users -->', logged_in_users)   
     socketio.emit('logged_in_users', logged_in_users, broadcast=True)
     return logged_in_users
 
@@ -119,6 +122,14 @@ def handle_logout():
 def handle_connection():
     print("User Connected: ", request.sid)
 
+@socketio.on("add_sid")
+def handle_session(data):
+    for i in range(len(logged_in_users)):
+        if logged_in_users[i]['email'] == data:
+            logged_in_users[i]['sid'] = request.sid
+            break
+    print("These are the logged in users : -->",logged_in_users)
+
 @socketio.on('created a message')
 def handle_created_message():
     data = Messages.get_messages() # I avoided using JWTs on this one
@@ -127,5 +138,9 @@ def handle_created_message():
 @socketio.on("disconnect")
 def handle_disconnect():
     print("User Disconnected: ", request.sid)
-
+    for i in range(len(logged_in_users)):
+        if logged_in_users[i]['sid'] == request.sid:
+            logged_in_users[i]['sid'] = ''
+            break
+    print("Logged in users from disconnect: ", logged_in_users)
     

@@ -10,6 +10,7 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
+    last_login = db.Column(db.DateTime, default=datetime.now())
 
     def get_users():
         data = User.query.all()
@@ -66,7 +67,7 @@ class User(db.Model):
 
 class Messages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(400), unique=True, nullable=False)
+    message = db.Column(db.String(400), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -98,8 +99,7 @@ class Messages(db.Model):
 
 with app.app_context():
     db.create_all()
-
-  
+   
 
 
 
