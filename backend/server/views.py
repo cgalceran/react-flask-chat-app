@@ -94,11 +94,9 @@ def handle_login():
             "firstname": user['firstname'],
             "lastname": user['lastname'],
         }
-        print("Data from JWT ---->", jwt_data)
         access_token = create_access_token(identity=jwt_data, fresh=timedelta(hours=24))
         User.user_last_login(email)
         socketio.emit('logged_in_users', handle_logged_users(), broadcast=True)
-        print("This is the access token: --->", access_token)
         return jsonify(access_token=access_token)
     else:
         return "Incorrect password"

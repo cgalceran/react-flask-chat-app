@@ -44,19 +44,15 @@ class User(db.Model):
     def create_user(firstname,lastname, email, password):
         check_if_email_exists = User.query.filter_by(email=email).first()
         if check_if_email_exists == None:
-                        #true
             user = User(firstname=firstname, lastname=lastname, email=email, password=password)
             db.session.add(user)
             db.session.commit()
-            print('Created User:', firstname, 'with email:',email)
             return '% r' % User.query.filter_by(email=email).first()            
         else:
             if email != check_if_email_exists.email:
-                        #true
                 user = User(firstname=firstname, lastname=lastname, email=email, password=password)
                 db.session.add(user)
                 db.session.commit()
-                print('Created User:', firstname, 'with email:',email)
                 return '% r' % User.query.filter_by(email=email).first()                         
             else:
                 return 'User already exists'    
