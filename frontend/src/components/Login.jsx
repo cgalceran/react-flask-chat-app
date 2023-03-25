@@ -13,14 +13,6 @@ const Login = () => {
     alertTextLogin,
   } = useContext(UserContext);
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    if (isAuthorized == true) {
-      navigate('/chat')
-    } else if (isAuthorized == true) {
-      navigate('/login')
-    }
-  }, [isAuthorized])
 
   const onSubmit = (e) => {
     e.preventDefault();

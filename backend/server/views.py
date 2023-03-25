@@ -1,4 +1,4 @@
-from server import app, socketio
+from server import app, socketio 
 from flask import request, send_from_directory, jsonify
 from datetime import timedelta
 from .models import User, Messages
@@ -16,10 +16,6 @@ logged_in_users = []
 @app.route('/')
 def getIndex():
     return app.send_static_file("index.html")
-
-@app.route('/chat')
-def getChat():
-    return app.send_static_file("index.html")    
 
 # ====================================================
 # Users
@@ -41,8 +37,6 @@ def user_create():
 @app.get('/api/users/active')
 def handle_logged_users():
     logged_in_users = User.get_loggedin_users()
-    # for user in users:
-    #     logged_in_users.append(user)
     return logged_in_users   
 
 # Get list of users from db

@@ -16,7 +16,7 @@ app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 # SocketIO init
-app.config['SECRET_KEY'] = 'secret'
+app.config['SECRET_KEY'] = os.environ.get("SOCKET_SECRET_KEY")
 socketio = SocketIO(app, cors_allowed_origins='*', logger=True)
 
 # Database init

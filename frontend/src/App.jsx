@@ -1,12 +1,12 @@
-import React from "react";
-import { Link } from 'react-router-dom'
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route} from "react-router-dom"
 import useDarkMode from "./hooks/useDarkMode";
 import { UserContextProvider } from "./contexts/UserContext";
 import { BsSun, BsMoonFill, BsGithub } from "react-icons/bs";
-import Bubble from "./components/Bubble";
+// import { UserContext } from "./contexts/UserContext";
 
 
+import MainComponent from "./components/MainComponent";
 import Login from './components/Login'
 import Chat from "./components/Chat";
 import Signup from "./components/Signup";
@@ -15,11 +15,13 @@ import { Footer } from "./components/Footer";
 function App() {
   const [darkTheme, setDarkTheme] = useDarkMode();
   const handleMode = () => setDarkTheme(!darkTheme);
+  // const userData = useContext(UserContext);
+
+  
 
   return (
     <main className="h-screen bg-[#e8e8e8] dark:bg-[#212121]">
       <div className="flex flex-row justify-end pr-4">
-       
         <span
           className="mt-4 rounded-lg bg-[#e8e8e8] p-1 outline outline-1 drop-shadow-xl hover:bg-[#dbdbdb]"
           onClick={handleMode}
@@ -42,9 +44,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route>
-                <Route path="/" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/chat" element={<Chat />} />
+                <Route path="/" element={ <MainComponent /> } />
+                <Route path="/signup" element={<Signup />} />    
               </Route>
             </Routes>
           </BrowserRouter>
