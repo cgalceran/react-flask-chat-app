@@ -62,7 +62,7 @@ class User(db.Model):
                 return 'User already exists'    
 
     def get_loggedin_users():
-        data = User.query.filter(User.last_login > datetime.now() - timedelta(minutes=10))
+        data = User.query.filter(User.last_login > datetime.now() - timedelta(minutes=2))
         users = []
         for element in data:
             dict = {
@@ -70,8 +70,7 @@ class User(db.Model):
                 'lastname': element.lastname,
                 'email': element.email,
             }
-            users.append(dict)
-        print("Users connected more than 2 min: ", users)    
+            users.append(dict) 
         return users    
 
     def user_last_login(email):

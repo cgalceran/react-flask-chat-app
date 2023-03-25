@@ -1,5 +1,5 @@
 from server import app, socketio
-from flask import request, jsonify
+from flask import request, send_from_directory, jsonify
 from datetime import timedelta
 from .models import User, Messages
 import bcrypt
@@ -13,9 +13,13 @@ logged_in_users = []
 # Static Serving
 # ====================================================
 
-# @app.route('/')
-# def getIndex():
-#     return "<p>Hello, World!</p>"    
+@app.route('/')
+def getIndex():
+    return app.send_static_file("index.html")
+
+@app.route('/chat')
+def getChat():
+    return app.send_static_file("index.html")    
 
 # ====================================================
 # Users
