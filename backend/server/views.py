@@ -1,5 +1,6 @@
 from server import app, socketio
 from flask import request, jsonify
+from datetime import timedelta
 from .models import User, Messages
 import bcrypt
 
@@ -32,13 +33,15 @@ def user_create():
     return User.create_user(firstname, lastname, email, hashed_password.decode('utf8')) #had to decode hashed password to insert in db
 
 #Get list of active users from array
-@jwt_required()
+@jwt_required(optional=True)
 @app.get('/api/users/active')
 def handle_logged_users():
-    return logged_in_users
+    logged_in_users = User.get_loggedin_users()
+    # for user in users:
+    #     logged_in_users.append(user)
+    return logged_in_users   
 
 # Get list of users from db
-
 @app.get('/api/users')
 def handle_users():
     return User.get_users()
@@ -70,6 +73,7 @@ def message_create():
     message = request.json.get('message')
     email = request.json.get('email')
     user_id = (handle_single_user(email))['_id']
+    User.user_last_login(email)
     return Messages.create_message(message, user_id)
 
 
@@ -86,17 +90,17 @@ def handle_login():
         stored_password = str(user['password'])
     else:
         return "User not found"
-    if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):
-        access_token = create_access_token(identity=email)
-        log_user = {
+    if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):  
+        jwt_data = {
+            "email": user['email'],
             "firstname": user['firstname'],
             "lastname": user['lastname'],
-            "email": user['email'],
-            'sid': '', 
         }
-        logged_in_users.append(log_user)
-        print('logged users in function 1')
-        socketio.emit('logged_in_users', logged_in_users, broadcast=True)
+        print("Data from JWT ---->", jwt_data)
+        access_token = create_access_token(identity=jwt_data, fresh=timedelta(hours=24))
+        User.user_last_login(email)
+        socketio.emit('logged_in_users', handle_logged_users(), broadcast=True)
+        print("This is the access token: --->", access_token)
         return jsonify(access_token=access_token)
     else:
         return "Incorrect password"
@@ -105,12 +109,12 @@ def handle_login():
 @app.post('/api/logout')
 def handle_logout():
     email = request.json.get('email')
+    logged_in_users = handle_logged_users()
     for i in range(len(logged_in_users)):
         if logged_in_users[i]['email'] == email:
             del logged_in_users[i]
             break
-    print('Print from logout function, logged users -->', logged_in_users)   
-    socketio.emit('logged_in_users', logged_in_users, broadcast=True)
+    socketio.emit('logged_in_users', logged_in_users , broadcast=True)
     return logged_in_users
 
 
@@ -122,14 +126,6 @@ def handle_logout():
 def handle_connection():
     print("User Connected: ", request.sid)
 
-@socketio.on("add_sid")
-def handle_session(data):
-    for i in range(len(logged_in_users)):
-        if logged_in_users[i]['email'] == data:
-            logged_in_users[i]['sid'] = request.sid
-            break
-    print("These are the logged in users : -->",logged_in_users)
-
 @socketio.on('created a message')
 def handle_created_message():
     data = Messages.get_messages() # I avoided using JWTs on this one
@@ -138,9 +134,4 @@ def handle_created_message():
 @socketio.on("disconnect")
 def handle_disconnect():
     print("User Disconnected: ", request.sid)
-    for i in range(len(logged_in_users)):
-        if logged_in_users[i]['sid'] == request.sid:
-            logged_in_users[i]['sid'] = ''
-            break
-    print("Logged in users from disconnect: ", logged_in_users)
     

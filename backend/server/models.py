@@ -1,5 +1,6 @@
 from server import app, db
-from datetime import datetime
+from sqlalchemy.sql import func
+from datetime import datetime, timedelta
 
 
 # -------User Class --------------------------------------------
@@ -9,8 +10,8 @@ class User(db.Model):
     lastname = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    last_login = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=func.now())
+    last_login = db.Column(db.DateTime, default=func.now())
 
     def get_users():
         data = User.query.all()
@@ -59,6 +60,27 @@ class User(db.Model):
                 return '% r' % User.query.filter_by(email=email).first()                         
             else:
                 return 'User already exists'    
+
+    def get_loggedin_users():
+        data = User.query.filter(User.last_login > datetime.now() - timedelta(minutes=10))
+        users = []
+        for element in data:
+            dict = {
+                'firstname': element.firstname,
+                'lastname': element.lastname,
+                'email': element.email,
+            }
+            users.append(dict)
+        print("Users connected more than 2 min: ", users)    
+        return users    
+
+    def user_last_login(email):
+        user = User.query.filter_by(email=email).first()
+        user.last_login = func.now()
+        db.session.commit()
+        return "Last Login updated"
+
+
 
     def __repr__(self):
         return '<User %r>' % self.firstname

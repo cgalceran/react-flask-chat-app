@@ -5,7 +5,6 @@ import axios from "axios";
 import socket from "../utils/socket";
 import Bubble from "./Bubble";
 import { BsFillCircleFill } from "react-icons/bs";
-import jwt_decode from "jwt-decode";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -17,9 +16,7 @@ const Chat = () => {
 
   // Initial data to chat - (Active Users and Messages)
   useEffect(() => {
-    const decoded = jwt_decode(localStorage.getItem("token"));
     socket.connect();
-    socket.emit('add_sid', decoded.sub)
     const opts = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -90,7 +87,7 @@ const Chat = () => {
   if (!userData) {
     return <div> Loading...</div>
   } 
-  const {userInfo, loggedInUsers, setLoggedInUsers, logout, token } = userData
+  const {userInfo, loggedInUsers, setLoggedInUsers, logout } = userData
 
 
   return (
