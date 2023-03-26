@@ -58,7 +58,7 @@ class User(db.Model):
                 return 'User already exists'    
 
     def get_loggedin_users():
-        data = User.query.filter(User.last_login > datetime.now() - timedelta(minutes=2))
+        data = User.query.filter(User.last_login > datetime.now() - timedelta(minutes=5))
         users = []
         for element in data:
             dict = {

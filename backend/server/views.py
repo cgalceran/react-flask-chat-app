@@ -1,5 +1,5 @@
 from server import app, socketio 
-from flask import request, send_from_directory, jsonify
+from flask import request, jsonify
 from datetime import timedelta
 from .models import User, Messages
 import bcrypt

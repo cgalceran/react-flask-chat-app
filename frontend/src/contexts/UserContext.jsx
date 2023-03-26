@@ -11,6 +11,7 @@ export const UserContextProvider = ({ children }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [alertLogin, setAlertLogin] = useState(false);
   const [alertTextLogin, setAlertTextLogin] = useState("");
+  const [isGuest, setIsGuest] = useState(false)
 
 
   useEffect(() => {
@@ -80,6 +81,9 @@ export const UserContextProvider = ({ children }) => {
           };
           axios.get(`/api/users/${email}`, opts).then((response) => {
             setUserInfo(response.data);
+            if (response.data.email == "guest@guest.com") {
+              setIsGuest(true);
+            }
           });
         }
       })
@@ -124,6 +128,8 @@ export const UserContextProvider = ({ children }) => {
     register,
     login,
     logout,
+    isGuest,
+    setIsGuest
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

@@ -3,21 +3,14 @@ import { BrowserRouter, Routes, Route} from "react-router-dom"
 import useDarkMode from "./hooks/useDarkMode";
 import { UserContextProvider } from "./contexts/UserContext";
 import { BsSun, BsMoonFill, BsGithub } from "react-icons/bs";
-// import { UserContext } from "./contexts/UserContext";
-
 
 import MainComponent from "./components/MainComponent";
-import Login from './components/Login'
-import Chat from "./components/Chat";
 import Signup from "./components/Signup";
 import { Footer } from "./components/Footer";
 
 function App() {
   const [darkTheme, setDarkTheme] = useDarkMode();
   const handleMode = () => setDarkTheme(!darkTheme);
-  // const userData = useContext(UserContext);
-
-  
 
   return (
     <main className="h-screen bg-[#e8e8e8] dark:bg-[#212121]">

@@ -3,15 +3,11 @@ import passlogo from "../images/pass.svg";
 import userlogo from "../images/user.svg";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
-import useSocket from "../hooks/useSocket";
 
 const Login = () => {
-  const {
-    login,
-    isAuthorized,
-    alertLogin,
-    alertTextLogin,
-  } = useContext(UserContext);
+  const { login, setIsAuthorized, alertLogin, alertTextLogin, setIsGuest, isGuest } =
+    useContext(UserContext);
+
   const navigate = useNavigate();
 
   const onSubmit = (e) => {
@@ -24,8 +20,12 @@ const Login = () => {
     navigate("/signup");
   };
 
+  const logGuest = () => {
+    login('guest@guest.com', '12345');
+  }
+
   return (
-    <div onSubmit={onSubmit} className="w-96 drop-shadow-xl">
+    <div onSubmit={onSubmit} className=" w-80 drop-shadow-xl">
       <form
         action="submit"
         className="flex flex-col gap-3 rounded-3xl bg-[#171717] pl-8 pr-8 pb-2 transition-transform duration-200 ease-in-out hover:scale-105 hover:border-2 hover:border-black"
@@ -89,7 +89,9 @@ const Login = () => {
             Sign Up
           </button>
 
-          <button className="rounded-lg border-none bg-[#252525] p-2 px-3 text-white outline-none ease-in-out hover:bg-black hover:text-white">
+          <button 
+          onClick={logGuest}          
+          className="rounded-lg border-none bg-[#252525] p-2 px-3 text-white outline-none ease-in-out hover:bg-black hover:text-white">
             Guest
           </button>
         </div>
