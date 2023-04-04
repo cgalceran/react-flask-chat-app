@@ -9,10 +9,9 @@ export const UserContextProvider = ({ children }) => {
   const [loggedInUsers, setLoggedInUsers] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [alertLogin, setAlertLogin] = useState(false);
-  const [alertTextLogin, setAlertTextLogin] = useState("");
-  const [isGuest, setIsGuest] = useState(false)
-
+  const [alertLogin, setAlertLogin] = useState(false); // Alerts
+  const [alertTextLogin, setAlertTextLogin] = useState(""); // Alerts
+  const [isGuest, setIsGuest] = useState(false); // Guest Login
 
   useEffect(() => {
     const tokenFromApp = localStorage.getItem("token");
@@ -129,7 +128,7 @@ export const UserContextProvider = ({ children }) => {
     login,
     logout,
     isGuest,
-    setIsGuest
+    setIsGuest,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

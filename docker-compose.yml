@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  flask_app:
+    container_name: chat_app
+    image: react_chat_app:1.0.0
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@flask_db/chat_app
+      - JWT_SECRET=13s5e4fwef2hfye()sdfsdg1
+      - SOCKET_SECRET_KEY=notsosecret
+    depends_on:
+      - flask_db
+  flask_db:
+    container_name: chat_db
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=chat_app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}
