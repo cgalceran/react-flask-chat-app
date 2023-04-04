@@ -30,4 +30,4 @@ EXPOSE 5000
 
 WORKDIR /app/backend
 
-CMD ["gunicorn", "-w", "1",  "--threads", "100",  "server:app", "-b", ":5000"]
+CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker",  "-w", "1",  "server:app", "-b", ":5000"]
